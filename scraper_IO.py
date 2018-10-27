@@ -15,7 +15,7 @@ import os
 
 
 # 1 Scrape from html page ---
-page = requests.get("https://www.corriere.it/")
+page = requests.get("https://########/")
 page
 page.status_code
 
