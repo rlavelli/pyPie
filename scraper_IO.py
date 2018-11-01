@@ -12,16 +12,24 @@ import pandas as pd
 from bs4 import BeautifulSoup
 import sqlite3
 import os
+import re
 
+#"https://www.repubblica.it"
+#"https://www.corriere.it/"
+url = "https://www.corriere.it/" # set the url
+# match newspaper name
+pat = r'.*?\.(.*)\..*' # matches everything inside two dots
+match = re.search(pat, url)
+newspaper = match.group(1)
 
 # 1 Scrape from html page ---
-page = requests.get("https://########/")
+page = requests.get(url)
 page
 page.status_code
 
 soup = BeautifulSoup(page.content, 'html.parser')
 
-p = soup.find_all('h3', class_='title_art')
+p = soup.find_all('h3', class_='title_art') # deve essere diverso in base a url
 
 tag_list = []
 for element in p:
@@ -31,7 +39,7 @@ for element in p:
 #tag_list
 scraped_titles = pd.DataFrame(tag_list)
 scraped_titles["newspaper_id"] = 1
-scraped_titles["newspaper_name"] = "corriere"
+scraped_titles["newspaper_name"] = newspaper
 scraped_titles.columns = ["title", "newspaper_id", "newspaper_name"]
 new_order = [1,2,0]
 scraped_titles = scraped_titles[scraped_titles.columns[new_order]]
@@ -66,6 +74,10 @@ def insert_scraped(df_scrape):
 insert_scraped(scraped_titles) # call to insert
 cur.close()
 conn.close()
+
+
+
+
 
 
 
