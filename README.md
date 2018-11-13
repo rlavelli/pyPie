@@ -1,2 +1,2 @@
 # pyPie
-In this repository I put all the snippets of code of various exercies.
+In this repository there are different snippets of code from various exercies.
