@@ -1,3 +1,4 @@
+# ------------------------------------------------------------------------------------------------------------------------------
 # Fill Missing values
 
 # Create a groupby object: by_sex_class
@@ -13,7 +14,7 @@ titanic.age = by_sex_class['age'].transform(impute_median) #impute median by gro
 # Print the output of titanic.tail(10)
 print(titanic.tail(10))
 
-
+# ------------------------------------------------------------------------------------------------------------------------------
 # corrplot function custom
 import numpy as np
 import seaborn as sns
@@ -37,3 +38,4 @@ columns = []
 
 plot_correlation_heatmap(train[columns])
 
+# ------------------------------------------------------------------------------------------------------------------------------
