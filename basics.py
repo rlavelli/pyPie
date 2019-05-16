@@ -88,3 +88,68 @@ def head_tail(dataframe):
     middle.index = pd.Index(['...'])
     
     return pd.concat([data_head, middle, data_tail], axis=0)
+
+# ------------------------------------------------------------------------------------------------------------------------------
+
+# fit kearas NN model with EarlyStop & plot history
+
+#import tensorflow as tf
+#from tensorflow import keras
+#from tensorflow.keras import layers
+
+def build_model():
+  model = keras.Sequential([
+    layers.Dense(128, activation='relu', input_shape=[len(train_dataset.keys())]),
+    layers.Dense(64, activation='relu'),
+    layers.Dense(32, activation='relu'),
+    layers.Dense(1)
+  ])
+
+  optimizer = tf.keras.optimizers.RMSprop(0.001)
+
+  model.compile(loss='mae',
+                optimizer=optimizer,
+                metrics=['mae', 'mse'])
+  return model
+model = build_model()
+
+# print function (set verbose=0)
+class PrintDot(keras.callbacks.Callback):
+    def on_epoch_end(self, epoch, logs):
+        if epoch % 100 == 0: print('')
+        if epoch % 100 == 0: print(epoch)
+        print('.', end='')
+        if epoch == 999: print('\nDone')
+early_stop = keras.callbacks.EarlyStopping(monitor='val_loss', patience=10) #early stop
+
+# fit model
+history = model.fit(normed_train_data, train_labels, epochs=EPOCHS,
+                    validation_split = 0.2, verbose=0, callbacks=[early_stop, PrintDot()]) # 0.2 validation
+
+# history plot
+def plot_history(history):
+    hist = pd.DataFrame(history.history) # this shows metrics
+    hist['epoch'] = history.epoch
+
+    # MAE plot
+    plt.figure()
+    plt.xlabel('Epoch')
+    plt.ylabel('Mean Abs Error')
+    plt.plot(hist['epoch'], hist['mae'], # x,y plot
+             label='Train Error')
+    plt.plot(hist['epoch'], hist['val_mae'],
+             label = 'Val Error')
+#     plt.ylim([0,5])
+    plt.legend()
+
+    # MSE plot
+    plt.figure()
+    plt.xlabel('Epoch')
+    plt.ylabel('Mean Square Error')
+    plt.plot(hist['epoch'], hist['mse'],
+             label='Train Error')
+    plt.plot(hist['epoch'], hist['val_mse'],
+             label = 'Val Error')
+#     plt.ylim([0,20])
+    plt.legend()
+    plt.show()
