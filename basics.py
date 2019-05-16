@@ -70,3 +70,21 @@ polynomial_regression = Pipeline([
     ])
 
 plot_learning_curves(polynomial_regression, X, y)
+
+# ------------------------------------------------------------------------------------------------------------------------------
+
+# Function Head&Tail
+
+def head_tail(dataframe):
+    '''
+    Function that concats head&tail of DataFrame
+    '''
+    data_head = dataframe.head(2)
+    data_tail = dataframe.tail(2)
+    
+    middle = np.repeat('...', len(data_head.columns))
+    middle = pd.DataFrame(middle).T
+    middle.columns = data_head.columns
+    middle.index = pd.Index(['...'])
+    
+    return pd.concat([data_head, middle, data_tail], axis=0)
